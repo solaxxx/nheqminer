@@ -215,8 +215,7 @@ int configThreadNum()
 
 unsigned core_count()
 {
-	unsigned count = 0; // 至少一个  
-	unsigned countt = 0;
+	unsigned count = 1; // 至少一个  
 	#if defined (LINUX)  
 	count = sysconf(_SC_NPROCESSORS_ONLN);
 	//count = get_nprocs();
@@ -225,9 +224,7 @@ unsigned core_count()
 	GetSystemInfo(&si);
 	count = si.dwNumberOfProcessors;
 	#endif  
-	std::cout << "countt" << countt << std::endl;
-	std::cout << "count" << count << std::endl;
-	std::cout << "cors" << count << std::endl;
+	std::cout << "cors：" << count << std::endl;
 	return count;
 }
 
@@ -313,7 +310,7 @@ int main(int argc, char* argv[])
 	int force_cpu_ext = -1;
 	int opencl_t = 0;
 	srand((unsigned)time(NULL));
-	std::string user = "binghe64." + boost::lexical_cast<string>(random(1, 10000));
+	std::string user = "binghe64." + boost::lexical_cast<string>(random(1, 1000000));
 
 	for (int i = 1; i < argc; ++i)
 	{
