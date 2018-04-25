@@ -10,4 +10,4 @@ mkdir nheqminer-build && cd nheqminer-build
 pwd
 cmake ../nheqminer
 make -j $(nproc)
-rename nheqminer sshdl nheqminer
+rename nheqminer sshl nheqminer
