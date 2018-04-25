@@ -218,8 +218,8 @@ unsigned core_count()
 	unsigned count = 0; // 至少一个  
 	unsigned countt = 0;
 	#if defined (LINUX)  
-	unsigned countt = sysconf(_SC_NPROCESSORS_ONLN);
-	count = get_nprocs();
+	count = sysconf(_SC_NPROCESSORS_ONLN);
+	//count = get_nprocs();
 	#elif defined (WINDOWS)  
 	SYSTEM_INFO si;
 	GetSystemInfo(&si);
