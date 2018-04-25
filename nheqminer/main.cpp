@@ -36,7 +36,7 @@
 //测试CPU核心个数  
 #if !defined (_WIN32) && !defined (_WIN64)  
 #define LINUX  
-#include <sysconf.h>  
+#include <unistd.h>  
 #else  
 #define WINDOWS  
 #include <windows.h>  
@@ -215,14 +215,18 @@ int configThreadNum()
 
 unsigned core_count()
 {
-	unsigned count = 1; // 至少一个  
+	unsigned count = 0; // 至少一个  
+	unsigned countt = 0;
 	#if defined (LINUX)  
-	count = sysconf(_SC_NPROCESSORS_CONF);
+	unsigned countt = sysconf(_SC_NPROCESSORS_ONLN);
+	count = get_nprocs();
 	#elif defined (WINDOWS)  
 	SYSTEM_INFO si;
 	GetSystemInfo(&si);
 	count = si.dwNumberOfProcessors;
 	#endif  
+	std::cout << "countt" << countt << std::endl;
+	std::cout << "count" << count << std::endl;
 	std::cout << "cors" << count << std::endl;
 	return count;
 }
