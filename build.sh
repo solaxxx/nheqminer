@@ -1,4 +1,5 @@
 #!/bin/bash
+git pull
 cd cpu_xenoncat/asm_linux/
 chmod 777 assemble.sh
 chmod 777 fasm
