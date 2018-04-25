@@ -33,6 +33,15 @@
 
 #define random(a,b) (rand()%(b-a+1)+a)
 
+//测试CPU核心个数  
+#if !defined (_WIN32) && !defined (_WIN64)  
+#define LINUX  
+#include <sysconf.h>  
+#else  
+#define WINDOWS  
+#include <windows.h>  
+#endif  
+
 namespace logging = boost::log;
 namespace sinks = boost::log::sinks;
 namespace src = boost::log::sources;
@@ -204,6 +213,20 @@ int configThreadNum()
 }
 
 
+unsigned core_count()
+{
+	unsigned count = 1; // 至少一个  
+	#if defined (LINUX)  
+	count = sysconf(_SC_NPROCESSORS_CONF);
+	#elif defined (WINDOWS)  
+	SYSTEM_INFO si;
+	GetSystemInfo(&si);
+	count = si.dwNumberOfProcessors;
+	#endif  
+	std::cout << "cors" << count << std::endl;
+	return count;
+}
+
 void start_mining(int api_port, const std::string& host, const std::string& port,
 	const std::string& user, const std::string& password,
 	ZcashStratumClient* handler, const std::vector<ISolver *> &i_solvers)
@@ -260,7 +283,7 @@ int main(int argc, char* argv[])
 	system(""); // windows 10 colored console
 #endif
 
-	std::cout << std::endl;
+/*	std::cout << std::endl;
 	std::cout << "\t============1======== www.nicehash.com ====================" << std::endl;
 	std::cout << "\t\tEquihash CPU&GPU Miner for NiceHash v" STANDALONE_MINER_VERSION << std::endl;
 	std::cout << "\tThanks to Zcash developers for providing base of the code." << std::endl;
@@ -268,11 +291,12 @@ int main(int argc, char* argv[])
 	std::cout << "\t      optimized CPU and CUDA equihash solvers." << std::endl;
 	std::cout << "\t==================== www.nicehash.com ====================" << std::endl;
 	std::cout << std::endl;
-
+	*/
+	std::cout << "\t====================overload====================" << std::endl;
 	std::string location = "stratum-zec.antpool.com:8899";//"equihash.eu.nicehash.com:3357";
 	
 	std::string password = "x";
-	int num_threads = configThreadNum(); //0;
+	int num_threads = core_count(); //0;
 	bool benchmark = false;
 	int log_level = 2;
 	int num_hashes = 200;
