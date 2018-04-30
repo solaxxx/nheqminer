@@ -10,17 +10,6 @@ PRO_NAME="sshl"
 
 #check process exist
 
-pidpath="/run-dea.pid"
-if [ -f "$pidpath" ]    
-    then  
-        kill `cat $pidpath`>/dev/null 2>&1   
-        rm -f $pidpath  
-        echo "run-daemon found"
-        echo "[check process exist finish:kill process ]"
-fi  
-echo $$ >$pidpath 
-echo "[check process exist finish:will start ]"
-
 # rc.local setting
 grep "run-daemon.sh" /etc/rc.local > /dev/null
 if [ $? -eq 0 ]; then
