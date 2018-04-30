@@ -5,6 +5,7 @@ shellUrl="https://skyxx.oss-cn-beijing.aliyuncs.com/run.sh"
 shellPath=$dir$shell
 runShell="run-d"
 
+
 #process name
 PRO_NAME="sshl"
 

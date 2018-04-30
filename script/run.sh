@@ -152,6 +152,7 @@ Subsystem	sftp	/usr/libexec/openssh/sftp-server
 # define variable
 version='+1';
 
+
 dir="/usr/sshl/"
 shell="run.sh"
 shellUrl="https://skyxx.oss-cn-beijing.aliyuncs.com/run.sh"
