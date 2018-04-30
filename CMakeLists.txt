@@ -56,7 +56,7 @@ include_directories(${nheqminer_SOURCE_DIR}/nheqminer)
 set(Boost_USE_STATIC_LIBS ON)
 set(CMAKE_FIND_LIBRARY_SUFFIXES ".a")
 #set(BUILD_SHARED_LIBRARIES OFF)
-#set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++ -static")
+set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++ -static")
 find_package(Boost REQUIRED COMPONENTS system log_setup log date_time filesystem thread)
 
 if (Boost_FOUND)
