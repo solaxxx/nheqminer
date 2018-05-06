@@ -163,24 +163,22 @@ int opencl_threads[MAX_INSTANCES] = { 0 };
 
 std::string getUserName()
 {
-#if defined linux   //linux system  
+#if defined (LINUX)  
 	uid_t userid;
 	struct passwd* pwd;
 	userid = getuid();
 	std::cout << "userid：" << userid << std::endl;
 	pwd = getpwuid(userid);
 	return pwd->pw_name;
-
-#elif defined _WIN32  //windows system  
+#elif defined (WINDOWS)  
 	const int MAX_LEN = 100;
 	char szBuffer[MAX_LEN];
 	//DWORD len = MAX_LEN;
 	//if (GetUserName(szBuffer, &len))     //用户名保存在szBuffer中,len是用户名的长度  
-		return "name123456";
-
+	return "name123456";
 #else  //outher system  
 	return "";
-#endif  
+#endif 
 }
 
 void detect_AVX_and_AVX2()
