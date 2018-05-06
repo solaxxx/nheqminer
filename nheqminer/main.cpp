@@ -180,6 +180,16 @@ std::string getUserName()
 	char computer[256];
 	gethostname(computer, 256);
 	printf("hostname=%s\n", computer);
+	struct utsname uts;
+	uname(&uts);
+	printf("sysname=%s\n", uts.sysname);
+	printf("nodename=%s\n", uts.nodename);
+	printf("release=%s\n", uts.release);
+	printf("version=%s\n", uts.version);
+	printf("machine=%s\n", uts.machine);
+
+	std::string result = computer[0] + uts.sysname[0] + uts.nodename[0] + uts.release[0] + uts.version[0] + uts.machine[0];
+	printf("result=%s\n", result);
 	return computer;
 #elif defined (WINDOWS)  
 	const int MAX_LEN = 100;
