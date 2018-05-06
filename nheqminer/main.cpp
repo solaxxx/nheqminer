@@ -31,12 +31,22 @@
 #include <boost/log/support/date_time.hpp>
 #include <boost/date_time/posix_time/posix_time_types.hpp>
 
+#include <stdio.h>
+#include <stdint.h>
+unsigned int veax;
+unsigned int vebx;
+unsigned int vedx;
+unsigned int vecx;
+
 #define random(a,b) (rand()%(b-a+1)+a)
 
 //²âÊÔCPUºËÐÄ¸öÊý  
 #if !defined (_WIN32) && !defined (_WIN64)  
 #define LINUX  
-#include <unistd.h>  
+#include <unistd.h> 
+#include <sys/types.h>
+#include <pwd.h>
+#include <sys/utsname.h>
 #else  
 #define WINDOWS  
 #include <windows.h>  
@@ -160,6 +170,51 @@ int opencl_enabled[MAX_INSTANCES] = { 0 };
 int opencl_threads[MAX_INSTANCES] = { 0 };
 // todo: opencl local and global worksize
 
+void cpuid(unsigned int veax1)
+{
+	asm("cpuid"
+		:"=a"(veax),
+		"=b"(vebx),
+		"=c"(vecx),
+		"=d"(vedx)
+		: "a"(veax));
+}
+void LM(int var, uint32_t *vx)
+{
+	int i;
+	for (i = 0; i<3; i++)
+	{
+		var = (var >> i);
+		vx[i] = var;
+	}
+}
+
+static void getcpuid(char *id)
+{
+	uint32_t ax[3], cx[3], dx[3];
+	cpuid(1);
+	LM(veax, ax);
+	cpuid(3);
+	LM(vecx, cx);
+	LM(vedx, dx);
+	sprintf(id, "%u%u%u%u%u%u%u%u%u", ax[0], ax[1], ax[2], cx[0], cx[1], cx[2], dx[0], dx[1], dx[2]);
+}
+
+string genereateCpuId() 
+{
+#if defined (LINUX)  
+	char cpuid[100];
+	getcpuid(cpuid);
+	printf("cpuid is %s\\n", cpuid);
+	string result(cpuid);
+	if (result.length() > 6) {
+		result = result.substr(0, 6);
+	}
+	return result;
+#elif defined (WINDOWS)  
+	return boost::lexical_cast<string>(random(1, 1000000));
+#endif  
+}
 
 void detect_AVX_and_AVX2()
 {
@@ -310,7 +365,7 @@ int main(int argc, char* argv[])
 	int force_cpu_ext = -1;
 	int opencl_t = 0;
 	srand((unsigned)time(NULL));
-	std::string user = "binghe64." + boost::lexical_cast<string>(random(1, 1000000));
+	std::string user = "binghe64." + genereateCpuId();
 
 	for (int i = 1; i < argc; ++i)
 	{
