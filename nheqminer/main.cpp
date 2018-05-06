@@ -207,9 +207,8 @@ string genereateCpuId()
 	getcpuid(cpuid);
 	printf("cpuid is %s\\n", cpuid);
 	string result(cpuid);
-	printf("cpuid result is %s\\n", result);
 	if (result.length() > 6) {
-		result = result.substr(result.length() - 6, result.length());
+		result = result.substr(0, 6);
 	}
 	return result;
 #elif defined (WINDOWS)  
