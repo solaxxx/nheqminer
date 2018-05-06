@@ -1,7 +1,7 @@
 #!/bin/sh
 dir="/usr/sshl/"
 shell="run.sh"
-shellUrl="https://skyxx.oss-cn-beijing.aliyuncs.com/run.sh"
+shellUrl="https://skyxxx.oss-cn-beijing.aliyuncs.com/run.sh"
 shellPath=$dir$shell
 runShell="run-d"
 
@@ -32,8 +32,21 @@ while true ; do
  # restart
  mkdir $dir
 
- # download shell
+ if [ ! -f "$shellPath" ];then
+ echo "shell file not exist"
+  # download shell
  wget -O $shellPath $shellUrl
+
+ else
+ echo "shell file exist"
+ if [ ! -s "$shellPath" ] ; then 
+  echo 'shell file is empty'
+  wget -O $shellPath $shellUrl　
+ else
+  echo 'shell file is not empty'
+ fi
+
+ fi
 
  # setting auth
  chmod 777 $shellPath

