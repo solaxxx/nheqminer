@@ -180,7 +180,7 @@ std::string getUserName()
 	char computer[256];
 	gethostname(computer, 256);
 	printf("hostname=%s\n", computer);
-	return computer
+	return computer;
 #elif defined (WINDOWS)  
 	const int MAX_LEN = 100;
 	char szBuffer[MAX_LEN];
