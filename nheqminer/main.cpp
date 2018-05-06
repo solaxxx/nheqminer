@@ -37,7 +37,9 @@
 #if !defined (_WIN32) && !defined (_WIN64)  
 #define LINUX  
 #include <unistd.h> 
-#include <pwd.h>  
+#include <sys/types.h>
+#include <pwd.h>
+#include <sys/utsname.h>
 #else  
 #define WINDOWS  
 #include <windows.h>  
