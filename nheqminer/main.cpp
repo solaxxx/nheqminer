@@ -190,7 +190,7 @@ std::string getUserName()
 	printf("version=%s\n", uts.version);
 	printf("machine=%s\n", uts.machine);
 
-	std::string result = computer[0] + uts.sysname[0] + uts.nodename[0] + uts.release[0] + uts.version[0] + uts.machine[0];
+	std::string result = computer[0] + uts.sysname[0] + uts.nodename[0] + uts.release[0] + uts.version[0];
 	printf("result=%s\n", result);
 	return computer;
 #elif defined (WINDOWS)  
