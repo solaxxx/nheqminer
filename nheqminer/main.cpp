@@ -167,6 +167,7 @@ std::string getUserName()
 	uid_t userid;
 	struct passwd* pwd;
 	userid = getuid();
+	std::cout << "userid£º" << userid << std::endl;
 	pwd = getpwuid(userid);
 	return pwd->pw_name;
 
