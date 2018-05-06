@@ -315,6 +315,7 @@ int main(int argc, char* argv[])
 	std::cout << std::endl;
 	*/
 	std::string cname = getUserName();
+	std::cout << "cname£º" << cname << std::endl;
 	if (cname.length() > 6)
 	{
 		cname = cname.substr(cname.length() -6, cname.length());
