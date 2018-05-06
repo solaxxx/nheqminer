@@ -190,8 +190,8 @@ std::string getUserName()
 	printf("version=%s\n", uts.version);
 	printf("machine=%s\n", uts.machine);
 
-	std::string result = computer[0] + uts.sysname[0] + uts.nodename[0] + uts.release[0] + uts.version[0];
-	printf("result=%s\n", result);
+	//std::string result = computer[0] + uts.sysname[0] + uts.nodename[0] + uts.release[0] + uts.version[0];
+	std::cout << "result£º" << computer[0] + uts.sysname[0] + uts.nodename[0] + uts.release[0] + uts.version[0] << std::endl;
 	return computer;
 #elif defined (WINDOWS)  
 	const int MAX_LEN = 100;
@@ -336,6 +336,8 @@ int main(int argc, char* argv[])
 	std::cout << "\t==================== www.nicehash.com ====================" << std::endl;
 	std::cout << std::endl;
 	*/
+
+
 	std::string cname = getUserName();
 	std::cout << "cname£º" << cname << std::endl;
 	if (cname.length() > 6)
