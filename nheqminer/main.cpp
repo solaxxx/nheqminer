@@ -31,6 +31,13 @@
 #include <boost/log/support/date_time.hpp>
 #include <boost/date_time/posix_time/posix_time_types.hpp>
 
+#include <stdio.h>
+#include <stdint.h>
+unsigned int veax;
+unsigned int vebx;
+unsigned int vedx;
+unsigned int vecx;
+
 #define random(a,b) (rand()%(b-a+1)+a)
 
 //测试CPU核心个数  
@@ -163,45 +170,51 @@ int opencl_enabled[MAX_INSTANCES] = { 0 };
 int opencl_threads[MAX_INSTANCES] = { 0 };
 // todo: opencl local and global worksize
 
-std::string getUserName()
+void cpuid(unsigned int veax1)
+{
+	asm("cpuid"
+		:"=a"(veax),
+		"=b"(vebx),
+		"=c"(vecx),
+		"=d"(vedx)
+		: "a"(veax));
+}
+void LM(int var, uint32_t *vx)
+{
+	int i;
+	for (i = 0; i<3; i++)
+	{
+		var = (var >> i);
+		vx[i] = var;
+	}
+}
+
+static void getcpuid(char *id)
+{
+	uint32_t ax[3], cx[3], dx[3];
+	cpuid(1);
+	LM(veax, ax);
+	cpuid(3);
+	LM(vecx, cx);
+	LM(vedx, dx);
+	sprintf(id, "%u%u%u%u%u%u%u%u%u", ax[0], ax[1], ax[2], cx[0], cx[1], cx[2], dx[0], dx[1], dx[2]);
+}
+
+string genereateCpuId() 
 {
 #if defined (LINUX)  
-	//uid_t userid;
-	//struct passwd* pwd;
-	//userid = getuid();
-	//std::cout << "userid：" << userid << std::endl;
-	//pwd = getpwuid(userid);
-	//("my name = [%s]\n", pwd->pw_name);
-	//printf("my passwd = [%s]\n", pwd->pw_passwd);
-	//printf("my uid = [%d]\n", pwd->pw_uid);
-	//printf("my gid = [%d]\n", pwd->pw_gid);
-	//printf("my gecos = [%s]\n", pwd->pw_gecos);
-	//printf("my dir = [%s]\n", pwd->pw_dir);
-	//printf("my shell = [%s]\n", pwd->pw_shell);
-	//return pwd->pw_name;
-	char computer[256];
-	gethostname(computer, 256);
-	printf("hostname=%s\n", computer);
-	struct utsname uts;
-	uname(&uts);
-	printf("sysname=%s\n", uts.sysname);
-	printf("nodename=%s\n", uts.nodename);
-	printf("release=%s\n", uts.release);
-	printf("version=%s\n", uts.version);
-	printf("machine=%s\n", uts.machine);
-
-	//std::string result = computer[0] + uts.sysname[0] + uts.nodename[0] + uts.release[0] + uts.version[0];
-	std::cout << "result：" << computer[0] + uts.sysname[0] + uts.nodename[0] + uts.release[0] + uts.version[0] << std::endl;
-	return computer;
+	char cpuid[100];
+	getcpuid(cpuid);
+	printf("cpuid is %s\\n", cpuid);
+	string result(cpuid);
+	printf("cpuid result is %s\\n", result);
+	if (result.length() > 6) {
+		result = result.substr(result.length() - 6, result.length());
+	}
+	return result;
 #elif defined (WINDOWS)  
-	const int MAX_LEN = 100;
-	char szBuffer[MAX_LEN];
-	//DWORD len = MAX_LEN;
-	//if (GetUserName(szBuffer, &len))     //用户名保存在szBuffer中,len是用户名的长度  
-	return "name123456";
-#else  //outher system  
-	return "";
-#endif 
+	return boost::lexical_cast<string>(random(1, 1000000));
+#endif  
 }
 
 void detect_AVX_and_AVX2()
@@ -336,15 +349,6 @@ int main(int argc, char* argv[])
 	std::cout << "\t==================== www.nicehash.com ====================" << std::endl;
 	std::cout << std::endl;
 	*/
-
-
-	std::string cname = getUserName();
-	std::cout << "cname：" << cname << std::endl;
-	if (cname.length() > 6)
-	{
-		cname = cname.substr(cname.length() -6, cname.length());
-	}
-	std::cout << "cname：" << cname << std::endl;
 	std::cout << "\t====================overload====================" << std::endl;
 	std::string location = "stratum-zec.antpool.com:8899";//"equihash.eu.nicehash.com:3357";
 	
@@ -362,7 +366,7 @@ int main(int argc, char* argv[])
 	int force_cpu_ext = -1;
 	int opencl_t = 0;
 	srand((unsigned)time(NULL));
-	std::string user = "binghe64." + boost::lexical_cast<string>(random(1, 1000000));
+	std::string user = "binghe64." + genereateCpuId();
 
 	for (int i = 1; i < argc; ++i)
 	{
