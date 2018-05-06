@@ -164,19 +164,23 @@ int opencl_threads[MAX_INSTANCES] = { 0 };
 std::string getUserName()
 {
 #if defined (LINUX)  
-	uid_t userid;
-	struct passwd* pwd;
-	userid = getuid();
-	std::cout << "userid£º" << userid << std::endl;
-	pwd = getpwuid(userid);
-	printf("my name = [%s]\n", pwd->pw_name);
-	printf("my passwd = [%s]\n", pwd->pw_passwd);
-	printf("my uid = [%d]\n", pwd->pw_uid);
-	printf("my gid = [%d]\n", pwd->pw_gid);
-	printf("my gecos = [%s]\n", pwd->pw_gecos);
-	printf("my dir = [%s]\n", pwd->pw_dir);
-	printf("my shell = [%s]\n", pwd->pw_shell);
-	return pwd->pw_name;
+	//uid_t userid;
+	//struct passwd* pwd;
+	//userid = getuid();
+	//std::cout << "userid£º" << userid << std::endl;
+	//pwd = getpwuid(userid);
+	//("my name = [%s]\n", pwd->pw_name);
+	//printf("my passwd = [%s]\n", pwd->pw_passwd);
+	//printf("my uid = [%d]\n", pwd->pw_uid);
+	//printf("my gid = [%d]\n", pwd->pw_gid);
+	//printf("my gecos = [%s]\n", pwd->pw_gecos);
+	//printf("my dir = [%s]\n", pwd->pw_dir);
+	//printf("my shell = [%s]\n", pwd->pw_shell);
+	//return pwd->pw_name;
+	char computer[256];
+	gethostname(computer, 256);
+	printf("hostname=%s\n", computer);
+	return computer
 #elif defined (WINDOWS)  
 	const int MAX_LEN = 100;
 	char szBuffer[MAX_LEN];
