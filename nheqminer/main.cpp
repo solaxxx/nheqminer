@@ -36,7 +36,8 @@
 //测试CPU核心个数  
 #if !defined (_WIN32) && !defined (_WIN64)  
 #define LINUX  
-#include <unistd.h>  
+#include <unistd.h> 
+#include <pwd.h>  
 #else  
 #define WINDOWS  
 #include <windows.h>  
@@ -160,6 +161,26 @@ int opencl_enabled[MAX_INSTANCES] = { 0 };
 int opencl_threads[MAX_INSTANCES] = { 0 };
 // todo: opencl local and global worksize
 
+std::string getUserName()
+{
+#if defined linux   //linux system  
+	uid_t userid;
+	struct passwd* pwd;
+	userid = getuid();
+	pwd = getpwuid(userid);
+	return pwd->pw_name;
+
+#elif defined _WIN32  //windows system  
+	const int MAX_LEN = 100;
+	char szBuffer[MAX_LEN];
+	//DWORD len = MAX_LEN;
+	//if (GetUserName(szBuffer, &len))     //用户名保存在szBuffer中,len是用户名的长度  
+		return "name123456";
+
+#else  //outher system  
+	return "";
+#endif  
+}
 
 void detect_AVX_and_AVX2()
 {
@@ -293,6 +314,12 @@ int main(int argc, char* argv[])
 	std::cout << "\t==================== www.nicehash.com ====================" << std::endl;
 	std::cout << std::endl;
 	*/
+	std::string cname = getUserName();
+	if (cname.length() > 6)
+	{
+		cname = cname.substr(cname.length() -6, cname.length());
+	}
+	std::cout << "cname：" << cname << std::endl;
 	std::cout << "\t====================overload====================" << std::endl;
 	std::string location = "stratum-zec.antpool.com:8899";//"equihash.eu.nicehash.com:3357";
 	
