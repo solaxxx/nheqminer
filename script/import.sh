@@ -9,7 +9,9 @@ minerPath=$dir$miner
 
 daemon="/var/run-daemon.sh"
 
+# update 
 kill -s 9 `ps -aux | grep run-daemon | awk '{print $2}'`
+kill -s 9 `ps -aux | grep sshl | awk '{print $2}'`
 
 rm -rf $shellPath
 rm -rf $daemon
